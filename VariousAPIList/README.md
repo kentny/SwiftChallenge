@@ -1,6 +1,7 @@
 # VariousAPIList
 ## Overview
 一般公開されているサンプルWEB APIから取得したデータをSwiftUIを使って表示する問題。
+
 各問題を通じて以下のような見た目のアプリを作る。
 
 ![Demo](https://github.com/kentny/SwiftChallenge/blob/main/image/demo.gif?raw=true)
@@ -24,12 +25,14 @@
 以下のディレクトリに最初のテンプレートとなるコードを用意した。 <br>
 これをベースに問題を解くこと。
 
+[Template Project](https://github.com/kentny/SwiftChallenge/tree/main/VariousAPIList/0_Template/VariousAPIList)
+
 ---
 ## 問1. 基本構造の実装
 ### 難易度：⭐️
 Album と Photo はそれぞれ以下のようなデータを持っている。 
 
-適当なサンプルデータをコード内に埋め込み、 `AlbumListPageView` と `PhotoListPageView` を実装せよ。
+適当なサンプルデータをコード内に埋め込み、 `AlbumListPageView` と `PhotoListPageView` を実装せよ。<br>
 （WEB APIはこの時点では呼ばない）
 
 `PhotoListPageView` に表示する画像は `thumbnailUrl` を使うこと。
@@ -77,6 +80,7 @@ Album と Photo の一覧データを以下のAPIを呼んで取得して表示�
 ## 問3. API Clientの実装
 ### 難易度：⭐️️⭐️️
 API呼び出しは頻繁に使う機能のため簡易的なAPI Clientを新規実装したい。
+
 API Client は以下の制約を設けて良い。
 
 - GET method のみのサポート。
@@ -150,3 +154,31 @@ Lazy Loadingとは何かを調べ、Lazy Loadingを実装することで、 `alb
 依存性注入によって、`URLSession` の利用をテスト可能にし、 `URLSession` の Spy を作成せよ。
 
 
+---
+## 問6. Reusable Listの実装
+### 難易度：⭐️️⭐️️⭐️️
+`AlbumListPageView`と`PhotoListPageView`を個別のViewとして作ったが、共通点が多いので共通処理は共通化したい。
+
+具体的には、`AlbumListPageView`と`PhotoListPageView`を以下の３つのViewに分解するアイデアを思いついた。
+
+| View              | 役割                   |
+|-------------------|----------------------|
+| ListPageView      | リスト画面の描画。            |
+| AlbumListItemView | リスト画面の各行のAlbum情報の描画。 |
+| PhotoListItemView | リスト画面の各行のPhoto情報の描画。 |
+
+Open-Closeの原則を意識し、今後他の種類の項目をリスト表示したい場合（ex. `TodoListItemView` の追加など）でも `ListPageView` には手を加えずに追加できるように実装せよ。
+
+---
+## 問7. Image Cache
+### 難易度：⭐️️⭐️️⭐️️
+現在`AsyncImage` を使ってPhotoリストの画像を表示している。
+
+だが、`AsyncImage` は画像をキャッシュしないためページ表示のたびに画像をダウンロードしていてパフォーマンスが悪い。
+
+この問題を解決するために画像データをキャッシュしたい。
+
+以下の要件を満たすViewパーツを自作せよ。
+
+- 同じURLの画像データはキャッシュし使い回せるようにする。
+- 一定時間経過したらキャッシュデータは破棄して次回は再度ダウンロードする。
