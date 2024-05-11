@@ -15,8 +15,8 @@
 | PhotoListPageView | Photo一覧を表示する画面 |
 
 
-## 条件と補足
-- 指定がない限り、外部ライブラリは使わない。
+## 制約と補足
+- 外部ライブラリは使わない。
 - 細かな見た目は問わない（デザイン実装は目的ではない）。
 
 ---
@@ -25,7 +25,8 @@
 これをベースに問題を解くこと。
 
 ---
-## 問1.
+## 問1. 基本構造の実装
+### 難易度：⭐️
 Album と Photo はそれぞれ以下のようなデータを持っている。 
 
 適当なサンプルデータをコード内に埋め込み、 `AlbumListPageView` と `PhotoListPageView` を実装せよ。
@@ -55,10 +56,12 @@ Album と Photo はそれぞれ以下のようなデータを持っている。
 ### Hint
 - `AsyncImage` を使うことでURLから直接画像を表示できる。
 ---
-## 問2.
+## 問2. API呼び出しの実装
+### 難易度：⭐️
 Album と Photo の一覧データを以下のAPIを呼んで取得して表示する、 `AlbumListPageView` と `PhotoListPageView` を実装せよ。
 
-APIは各PageViewが表示される際に呼ぶこと。
+- APIは各PageViewが表示される際に呼ぶこと。
+- ViewModel層を使うこと。
 
 |       | URL  |
 |-------|------|
@@ -69,4 +72,81 @@ APIは各PageViewが表示される際に呼ぶこと。
 
 ### Hint
 - API呼び出しには `URLSession` が使える。
+
+---
+## 問3. API Clientの実装
+### 難易度：⭐️️⭐️️
+API呼び出しは頻繁に使う機能のため簡易的なAPI Clientを新規実装したい。
+API Client は以下の制約を設けて良い。
+
+- GET method のみのサポート。
+- レスポンスデータは JSON である想定。
+- クエリパラメータはサポート。
+- ヘッダーカスタマイズはサポート。
+
+API Client はOpen-Closeの原則を意識して以下のような作りとする。
+
+`// TODO: ここを実装する` を実装せよ。
+
+また、実装したAPI Clientを使ってデータを取得し画面表示するようにリファクタリングせよ。
+
+（必要に応じて、 `// TODO` 部分以外も実装せよ。）
+
+```swift
+import Foundation
+
+enum HttpMethod: String {
+    case GET
+}
+
+protocol APIRequest {
+    associatedtype ResponseType: Decodable
+
+    var endpoint: String { get }
+    var method: HttpMethod { get }
+    var headers: [String: String] { get }
+    var baseURL: URL? { get }
+    var parameters: [String: String] { get }
+}
+
+struct GetAlbumsRequest: APIRequest {
+    // TODO: ここを実装する
+}
+
+struct GetPhotosRequest: APIRequest {
+    // TODO: ここを実装する
+}
+
+protocol APIClient {
+    func executeWithCompletion<T: APIRequest>(_ request: T, completion: @escaping (T.ResponseType?, Error?) -> Void)
+}
+
+class APIClientImpl: APIClient {
+    func executeWithCompletion<T>(_ request: T, completion: @escaping (T.ResponseType?, (any Error)?) -> Void) where T: APIRequest {
+        // TODO: ここを実装する
+    }
+}
+```
+
+### Hint
+- `APIClientImpl` 内では `URLSession` を直接使って良い。<br>つまりテスト可能な状態にする必要はない。
+
+---
+## 問4. Lazy Loading
+### 難易度：⭐️️
+`PhotoListPageView` では `albumId=1` の条件を入れることでパフォーマンスの劣化を防いでいる。
+
+だが、パフォーマンスを劣化せずに他の `albumId` のデータも表示させたい。
+
+Lazy Loadingとは何かを調べ、Lazy Loadingを実装することで、 `albumId` が `2...4`のデータも表示せよ。
+
+---
+## 問5. URLSession Spy
+### 難易度：⭐️️⭐️️
+`APIClientImpl` のなかで `URLSession` を使ってWEB APIを呼んでいる。
+
+`APIClientImpl` をテストするために、 `URLSession` をTestDoublesで置き換えたい。
+
+依存性注入によって、`URLSession` の利用をテスト可能にし、 `URLSession` の Spy を作成せよ。
+
 
