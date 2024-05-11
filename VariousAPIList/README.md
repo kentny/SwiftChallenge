@@ -153,9 +153,30 @@ Lazy Loadingとは何かを調べ、Lazy Loadingを実装することで、 `alb
 
 依存性注入によって、`URLSession` の利用をテスト可能にし、 `URLSession` の Spy を作成せよ。
 
+---
+## 問6. 様々なAPI Client
+### 難易度：⭐️️⭐️️
+Swiftには非同期処理を実行するためのメソッドの書き方が複数存在する。
+
+自作するAPI Clientにはそれらの全ての書き方をサポートさせたい。
+
+`APIClient`プロトコルを以下のように変更する。
+
+これに準拠する `APIClientImpl` を実装せよ。
+
+また、それぞれの書き方の長所・短所を述べよ。
+
+```swift
+protocol APIClient {
+    func executeWithCompletion<T: APIRequest>(_ request: T, completion: @escaping (T.ResponseType?, Error?) -> Void)
+    func executeWithFuture<T: APIRequest>(_ request: T) -> Future<T.ResponseType, Error>
+    func executeWithAsyncThrows<T: APIRequest>(_ request: T) async throws -> T.ResponseType
+    func executeWithAsyncResult<T: APIRequest>(_ request: T) async -> Result<T.ResponseType, Error>
+}
+```
 
 ---
-## 問6. Reusable Listの実装
+## 問7. Reusable Listの実装
 ### 難易度：⭐️️⭐️️⭐️️
 `AlbumListPageView`と`PhotoListPageView`を個別のViewとして作ったが、共通点が多いので共通処理は共通化したい。
 
@@ -170,7 +191,7 @@ Lazy Loadingとは何かを調べ、Lazy Loadingを実装することで、 `alb
 Open-Closeの原則を意識し、今後他の種類の項目をリスト表示したい場合（ex. `TodoListItemView` の追加など）でも `ListPageView` には手を加えずに追加できるように実装せよ。
 
 ---
-## 問7. Image Cache
+## 問8. Image Cache
 ### 難易度：⭐️️⭐️️⭐️️
 現在`AsyncImage` を使ってPhotoリストの画像を表示している。
 
