@@ -137,7 +137,7 @@ class APIClientImpl: APIClient {
 
 ---
 ## 問4. Lazy Loading
-### 難易度：⭐️️
+### 難易度：⭐️️⭐️️
 `PhotoListPageView` では `albumId=1` の条件を入れることでパフォーマンスの劣化を防いでいる。
 
 だが、パフォーマンスを劣化せずに他の `albumId` のデータも表示させたい。
@@ -180,13 +180,13 @@ protocol APIClient {
 ### 難易度：⭐️️⭐️️⭐️️
 `AlbumListPageView`と`PhotoListPageView`を個別のViewとして作ったが、共通点が多いので共通処理は共通化したい。
 
-具体的には、`AlbumListPageView`と`PhotoListPageView`を以下の３つのViewに分解するアイデアを思いついた。
+具体的には、`AlbumListPageView`と`PhotoListPageView`を廃止し、以下の３つのViewに分解するアイデアを思いついた。
 
-| View              | 役割                   |
-|-------------------|----------------------|
-| ListPageView      | リスト画面の描画。            |
-| AlbumListItemView | リスト画面の各行のAlbum情報の描画。 |
-| PhotoListItemView | リスト画面の各行のPhoto情報の描画。 |
+| View              | 役割                                          |
+|-------------------|---------------------------------------------|
+| ListPageView      | リスト画面の描画。                                   |
+| AlbumListItemView | リスト画面の各行のAlbum情報の描画。<br>ListPageViewの子View。 |
+| PhotoListItemView | リスト画面の各行のPhoto情報の描画。<br>ListPageViewの子View。 |
 
 Open-Closeの原則を意識し、今後他の種類の項目をリスト表示したい場合（ex. `TodoListItemView` の追加など）でも `ListPageView` には手を加えずに追加できるように実装せよ。
 
@@ -199,7 +199,7 @@ Open-Closeの原則を意識し、今後他の種類の項目をリスト表示�
 
 この問題を解決するために画像データをキャッシュしたい。
 
-以下の要件を満たすViewパーツを自作せよ。
+以下の要件を満たすViewパーツ、`CacheAsyncImage`を自作せよ。
 
 - 同じURLの画像データはキャッシュし使い回せるようにする。
 - 一定時間経過したらキャッシュデータは破棄して次回は再度ダウンロードする。
