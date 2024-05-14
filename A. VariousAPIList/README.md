@@ -25,7 +25,7 @@
 以下のディレクトリに最初のテンプレートとなるコードを用意した。 <br>
 これをベースに問題を解くこと。
 
-[Template Project](https://github.com/kentny/SwiftChallenge/tree/main/VariousAPIList/0_Template/VariousAPIList)
+[Template Project](https://github.com/kentny/SwiftChallenge/tree/main/A.%20VariousAPIList/0_Template/VariousAPIList)
 
 ---
 ## 問1. 基本構造の実装
